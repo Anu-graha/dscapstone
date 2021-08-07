@@ -1,0 +1,63 @@
+<html>
+
+<head>
+<title>Model Description</title>
+</head>
+
+<body>
+
+<ul> This app is based on "language-modeling" concept.</ul> 
+<ul> This app attempts to build a word suggestion feature while typing.</ul> 
+<ul> The app is designed to suggest the next relevant word based on a corpus of text collected from random sources (blogs, news and tweets).</ul> 
+
+
+<h3> Approach: N-gram model and stupid backoff </h3>
+
+<ul> Given a sequence of 'n-1' words, n-gram model predicts the next best word that might follow, based on a corpus of text. This is achieved by counting word sequences and frequencies.</ul>
+<ul> In this case, word sequences of upto 4-grams are only considered.The algorithm calculates the probalities of next possible word for the sequence based on the frequency of occurence.</ul>
+
+<ul> Stupid backoff is a smoothing technique applied to score those sequences which are not found in the corpus.If there is no n-gram of that size it will recurse to the (n-1)-gram and multiply its score with 0.4 until it finds a unigram. </ul>
+
+<h3>Implementation</h3>
+
+<em>Tokenization</em>
+<ul> 5% sample of lines are read from each file (blog, news, twitter) and broken into tokens (unigrams, bigrams, trigrams and 4-grams) and stored as document feature matrix. </ul>
+
+<em>Prediction Model</em>
+<ul> The document feature matrix is read into a data table </ul>
+<ul> If n-words are read, the next word is calculated like
+<b>frequency(n+1-word sequence)/frequency(n word sequence)</b></ul>
+    
+
+<h3>Example</h3>
+
+For example, if text entered is "How are", calculate the most occurred next word by looking up the dfm.
+<br>
+<table>
+  <tr>
+    <td>Word</td>
+    <td>Freq</td>
+    <td>ngram</td>
+  </tr>
+  <tr>
+    <td>how are you</td>
+    <td>190</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td>how are ya</td>
+    <td>7</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td>how are the</td>
+    <td>5</td>
+    <td>3</td>
+  </tr>
+</table>
+
+From the above, the app suggests "you" as the next word.
+
+
+</body>
+</html>

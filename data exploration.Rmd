@@ -1,0 +1,56 @@
+---
+title: "Data Exlporation"
+author: "Anugraha S"
+date: "8/2/2021"
+output: html_document
+---
+
+## Load the libraries
+```{r}
+library(quanteda)
+library(dplyr)
+library(ggplot2)
+library(quanteda.textplots)
+library(data.table)
+```
+
+## Read the data files
+```{r}
+blogfile<-"./data/en_US.blogs.txt"
+newsfile<-"./data/en_US.news.txt"
+twitterfile<-"./data/en_US.twitter.txt"
+
+bloglines<- readLines(blogfile,encoding="UTF-8", skipNul = TRUE)
+newslines<-readLines(newsfile,encoding="UTF-8", skipNul = TRUE)
+twitterlines<-readLines(twitterfile,encoding="UTF-8", skipNul = TRUE)
+```
+
+## Create summary view
+```{r}
+summary<-data.table(c('Blog file','News file','Twitter file'))
+
+# Number of lines in files
+
+summary<-rbind(summary,list("Number of Lines", length(bloglines),length(newslines), length(twitterlines)))
+
+# Size of files
+
+blog<-file.size(blogfile)/2^20
+news<-file.size(newsfile)/2^20
+tweet<-file.size(twitterfile)/2^20
+
+summary<-rbind(summary,list("File Size(in Mb)",blog,news,tweet))
+```
+## Create a corpus 
+```{r}
+blogdfm<-tokens(bloglines, remove_punct = TRUE, remove_symbols = TRUE, remove_url = TRUE, remove_separators = TRUE, remove_numbers = TRUE) %>% tokens_remove(pattern = stopwords("en")) %>% dfm(tolower = TRUE)
+
+newsdfm<-tokens(newslines, remove_punct = TRUE, remove_symbols = TRUE, remove_url = TRUE, remove_separators = TRUE, remove_numbers = TRUE) %>% tokens_remove(pattern = stopwords("en")) %>% dfm(tolower = TRUE)
+
+tweetdfm<-tokens(twitterlines, remove_punct = TRUE, remove_symbols = TRUE, remove_url = TRUE, remove_separators = TRUE, remove_numbers = TRUE) %>% tokens_remove(pattern = stopwords("en")) %>% dfm(tolower = TRUE)
+
+textplot_wordcloud(blogdfm, max_words=50)
+textplot_wordcloud(newsdfm, max_words=50)
+textplot_wordcloud(tweetdfm, max_words=50)
+
+```
